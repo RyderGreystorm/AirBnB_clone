@@ -14,15 +14,25 @@ class BaseModel:
     inherit from
     """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         Each time the class is instantaited, it will
         have all the attributes listed below
         """
 
-        self.id = uuid.uuid4()
-        self.created_at = datetime.now()
-        self.updated_at = self.created_at
+        if kwargs:
+            """removing the __class__"""
+            kwargs.pop("__class__", None)
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    """ Converting back to object"""
+                    setattr(self, key,datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
+                else:
+                    setattr(self, key, value)
+        else:
+            self.id = uuid.uuid4()
+            self.created_at = datetime.now()
+            self.updated_at = self.created_at
 
     def get_id(self):
         """
