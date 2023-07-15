@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 """
 Creating the instance of the File storage class
 """
