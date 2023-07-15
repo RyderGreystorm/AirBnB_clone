@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 Base class for our project.
 Ths Base class contains most of the information and logic other
@@ -7,6 +7,7 @@ classes would need
 
 import uuid
 from datetime import datetime
+
 
 class BaseModel:
     """
@@ -19,20 +20,24 @@ class BaseModel:
         Each time the class is instantaited, it will
         have all the attributes listed below
         """
-
+        from models import storage
         if kwargs:
             """removing the __class__"""
             kwargs.pop("__class__", None)
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
                     """ Converting back to object"""
-                    setattr(self, key,datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
+                    setattr(self,
+                            key,
+                            datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                            )
                 else:
                     setattr(self, key, value)
         else:
-            self.id = uuid.uuid4()
+            self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = self.created_at
+            storage.new(self)
 
     def get_id(self):
         """
@@ -63,17 +68,22 @@ class BaseModel:
         return f"[{type(self).__name__}] ({self.get_id}) {self.__dict__}"
 
     def save(self):
+        from models import storage
         """
         saves the updates made to the instance of our baseModel  class
         """
 
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         """
         returns the dictionary representation of an object
         """
-        self.__dict__["__class__"] = type(self).__name__
-        self.__dict__["created_at"] = self.get_created_at()
-        self.__dict__["updated_at"] = self.get_updated_at()
-        return self.__dict__
+        obj_dic = dict(self.__dict__)
+        obj_dic["__class__"] = type(self).__name__
+        obj_dic["created_at"] = self.get_created_at()
+        obj_dic["updated_at"] = self.get_updated_at()
+        obj_dic["id"] = str(self.id)
+        obj_dict.pop('_sa_instance_state', None)
+        return obj_dic
