@@ -20,30 +20,43 @@ from models.review import Review
 
 
 class TestFileStorage_instantiation(unittest.TestCase):
-    """Unittests for testing instantiation of the FileStorage class."""
+    """testing instantiation of Storage class"""
 
     def test_FileStorage_instantiation_no_args(self):
+        """file storage instantiating"""
+
         self.assertEqual(type(FileStorage()), FileStorage)
 
     def test_FileStorage_instantiation_with_arg(self):
+        """file storage instantiating with args"""
+
         with self.assertRaises(TypeError):
             FileStorage(None)
 
     def test_FileStorage_file_path_is_private_str(self):
+        """testing for Private path"""
+
         self.assertEqual(str, type(FileStorage._FileStorage__file_path))
 
     def testFileStorage_objects_is_private_dict(self):
+        """private dic testing of file storage class"""
+
         self.assertEqual(dict, type(FileStorage._FileStorage__objects))
 
     def test_storage_initializes(self):
+        """Testing for test storage initiaizes"""
+
         self.assertEqual(type(models.storage), FileStorage)
 
 
 class TestFileStorage_methods(unittest.TestCase):
-    """Unittests for testing methods of the FileStorage class."""
+    """testing methods of the FileStorage class."""
 
     @classmethod
     def setUp(self):
+        """
+        testing for setup
+        """
         try:
             os.rename("file.json", "tmp")
         except IOError:
