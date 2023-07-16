@@ -1,6 +1,8 @@
 #!/usr/bin/python3
+
 import json
-<<<<<<< HEAD
+import importlib
+import os
 from models.base_model import BaseModel
 
 
@@ -10,21 +12,8 @@ class FileStorage:
     Attributes:
         __file_path (str): The name of the file to save objects to.
         __objects (dict): A dictionary of instantiated objects.
-=======
-"""
-used for serializing and deserializing
-objects to and from JSON format
-"""
-
-class FileStorage:
->>>>>>> refs/remotes/origin/main
     """
-    filepath is a private class attribute showing path to
-    json where objects will be stored.
-    objects is a private class sttribure empty dictionary
-    to store objects by class name and id.
-    """
-    __file_path = "file.json" 
+    __file_path = "file.json"
     __objects = {}
 
     def all(self):
@@ -32,7 +21,7 @@ class FileStorage:
         dictionary, which contains all the objects
         stored in the FileStorage.
         """
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """
@@ -40,47 +29,47 @@ class FileStorage:
         takes obj as argument. class name and id
         used as  key in dictionary to store object
         """
-        key = f"{obj.__class__.__name__}.{obj.id}"
-        self.__objects[key] = obj
+        key = str(type(obj).__name__) + "." + obj.id
+        FileStorage.__objects[key] = obj
 
     def save(self):
-<<<<<<< HEAD
 
         """Serialize __objects to the JSON file __file_path."""
-        obdiction = {}
-        for key, obj in FileStorage.__objects.items():
-            obdiction[key] = obj.to_dict()
-        with open(FileStorage.__file_path, "w") as f:
-            json.dump(obdiction, f)
-=======
-        data = {}
-        for key, obj in self.__objects.items():
-            data[key] = obj.to_dict()
         with open(self.__file_path, "w") as file:
-            json.dump(data, file)
->>>>>>> refs/remotes/origin/main
+            obj_dic = {}
+            for key, value in FileStorage.__objects.items():
+                obj_dic[key] = FileStorage.__objects[key].to_dict()
+            json.dump(obj_dic, file)
 
     def reload(self):
-        try:
-<<<<<<< HEAD
-            with open(FileStorage.__file_path, "r") as f:
-                objdict = json.load(f)
+        """ deserializes the JSON file to __objects """
 
-            from models.base_model import BaseModel
-            for key, o in objdict.items():
-                cls_name = o["__class__"]
-                del o["__class__"]
-                self.new(eval(cls_name)(**o))
-=======
-            with open(self.__file_path, "r") as file:
-                data = json.load(file)
-                for key, obj_dict in data.items():
-                    class_name, obj_id = key.split(".")
-                    module = __import__("models." + class_name, fromlist=[class_name])
-                    cls = getattr(module, class_name)
-                    obj = cls(**obj_dict)
-                    self.__objects[key] = obj
->>>>>>> refs/remotes/origin/main
-        except FileNotFoundError:
-            pass
+        if not os.path.exists(FileStorage.__file_path):
+            return
 
+        with open(FileStorage.__file_path, "r") as file:
+            content = file.read()
+            if content is None:
+                return
+            objects_dict = json.loads(content)
+            FileStorage.__objects = {}
+            for key, value in objects_dict.items():
+                if "User" in key:
+                    FileStorage.__objects[key] = User(**objects_dict[key])
+                    continue
+                elif "State" in key:
+                    FileStorage.__objects[key] = State(**objects_dict[key])
+                    continue
+                elif "City" in key:
+                    FileStorage.__objects[key] = City(**objects_dict[key])
+                    continue
+                elif "Place" in key:
+                    FileStorage.__objects[key] = Place(**objects_dict[key])
+                    continue
+                elif "Amenity" in key:
+                    FileStorage.__objects[key] = Amenity(**objects_dict[key])
+                    continue
+                elif "Review" in key:
+                    FileStorage.__objects[key] = Review(**objects_dict[key])
+                    continue
+                FileStorage.__objects[key] = BaseModel(**objects_dict[key])
