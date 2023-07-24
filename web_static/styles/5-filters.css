@@ -3,6 +3,7 @@
 	height: 100%;
 	width: 25%;
 	border-right: 1px solid #DDDDDD;
+	position: relative;
 }
 
 .amenities {
@@ -11,6 +12,7 @@
 	left: -115px;
 	height: 100%;
         width: 25%;
+	position: relative;
 }
 
 .locations h3, .amenities h3 {

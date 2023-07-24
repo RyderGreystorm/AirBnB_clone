@@ -1,0 +1,36 @@
+
+/* New styles for the popover */
+.popover {
+	visibility: hidden; /* Hide the dropdown*/
+	background-color: #FAFAFA;
+	width: 100%;
+	border: 1px solid #DDDDDD;
+	border-radius: 4px;
+	list-style: none;
+	padding: 20px;
+	z-index: 1;
+	top: 100%;
+	left: 0;
+}
+
+/* Show the popover when hovering over the filter div */
+.locations:hover .popover,
+.amenities:hover .popover {
+  visibility: visible;
+}
+
+/* Add space between states and cities */
+.locations h2 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+/* Add space between amenities */
+.amenities li {
+	margin-bottom: 5px;
+	padding-left:20px;
+}
+.locations,
+.amenities {
+  position: relative;
+}
